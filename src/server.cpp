@@ -84,6 +84,9 @@ std::string Server::processCommand(const std::string& command) {
         store_.del(key);
         return "OK\r\n";
     }
+    else if (cmd == "PING") {
+        return "PONG\r\n";
+    }
     return "ERROR: Unknown command\r\n";
 }
 

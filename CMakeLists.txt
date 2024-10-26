@@ -11,5 +11,8 @@ endif()
 
 project ("redis")
 
-# Include sub-projects.
-add_subdirectory ("src")
+add_executable (redis "src/main.cpp"  "src/store.cpp" "src/server.cpp")
+
+if (CMAKE_VERSION VERSION_GREATER 3.12)
+  set_property(TARGET redis PROPERTY CXX_STANDARD 20)
+endif()

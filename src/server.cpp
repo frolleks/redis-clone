@@ -14,7 +14,7 @@ void Server::start() {
 
     // Create socket
     socket_t server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (server_fd == INVALID_SOCKET) {
+    if (server_fd == INVALID_SOCKET_VALUE) {
         std::cerr << "Socket creation failed with error: " << SOCKET_ERROR_CODE
                   << std::endl;
         cleanup();
@@ -48,7 +48,7 @@ void Server::start() {
     // Accept clients
     while (true) {
         socket_t client_socket = accept(server_fd, nullptr, nullptr);
-        if (client_socket == INVALID_SOCKET) {
+        if (client_socket == INVALID_SOCKET_VALUE) {
             std::cerr << "Accept failed with error: " << SOCKET_ERROR_CODE
                       << std::endl;
             continue;

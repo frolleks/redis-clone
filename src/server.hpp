@@ -15,6 +15,7 @@
 using socket_t = SOCKET;
 #define CLOSE_SOCKET closesocket
 #define SOCKET_ERROR_CODE WSAGetLastError()
+#define INVALID_SOCKET_VALUE INVALID_SOCKET
 #else
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -23,6 +24,7 @@ using socket_t = SOCKET;
 using socket_t = int;
 #define CLOSE_SOCKET close
 #define SOCKET_ERROR_CODE errno
+#define INVALID_SOCKET_VALUE -1
 #endif
 
 class Server {

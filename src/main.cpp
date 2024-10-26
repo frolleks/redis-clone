@@ -6,8 +6,7 @@
 
 int main() {
     Store store;
-    Server server(6379, store);  // Default Redis port
+    Server server(6379, store); // Default Redis port
     server.start();
     return 0;
 }
-

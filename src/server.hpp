@@ -2,11 +2,11 @@
 #define SERVER_HPP
 
 #include "store.hpp" // Include the Store class for key-value storage
-#include <string>
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <thread>
 #include <vector>
-#include <sstream>
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -16,9 +16,9 @@ using socket_t = SOCKET;
 #define CLOSE_SOCKET closesocket
 #define SOCKET_ERROR_CODE WSAGetLastError()
 #else
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/socket.h>
 #include <unistd.h>
 using socket_t = int;
 #define CLOSE_SOCKET close
@@ -26,16 +26,16 @@ using socket_t = int;
 #endif
 
 class Server {
-public:
-    Server(int port, Store& store);
+  public:
+    Server(int port, Store &store);
     void start();
 
-private:
+  private:
     int port_;
-    Store& store_;
+    Store &store_;
 
     void handleClient(socket_t client_socket);
-    std::string processCommand(const std::string& command);
+    std::string processCommand(const std::string &command);
     void cleanup();
 };
 

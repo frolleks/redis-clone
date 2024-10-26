@@ -1,12 +1,13 @@
 #include "server.hpp"
 
-Server::Server(int port, Store& store) : port_(port), store_(store) {}
+Server::Server(int port, Store &store) : port_(port), store_(store) {}
 
 void Server::start() {
 #ifdef _WIN32
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
-        std::cerr << "WSAStartup failed with error: " << WSAGetLastError() << std::endl;
+        std::cerr << "WSAStartup failed with error: " << WSAGetLastError()
+                  << std::endl;
         return;
     }
 #endif
@@ -14,7 +15,8 @@ void Server::start() {
     // Create socket
     socket_t server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd == INVALID_SOCKET) {
-        std::cerr << "Socket creation failed with error: " << SOCKET_ERROR_CODE << std::endl;
+        std::cerr << "Socket creation failed with error: " << SOCKET_ERROR_CODE
+                  << std::endl;
         cleanup();
         return;
     }
@@ -25,15 +27,17 @@ void Server::start() {
     address.sin_port = htons(port_);
 
     // Bind and listen
-    if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
-        std::cerr << "Bind failed with error: " << SOCKET_ERROR_CODE << std::endl;
+    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
+        std::cerr << "Bind failed with error: " << SOCKET_ERROR_CODE
+                  << std::endl;
         CLOSE_SOCKET(server_fd);
         cleanup();
         return;
     }
 
     if (listen(server_fd, 3) < 0) {
-        std::cerr << "Listen failed with error: " << SOCKET_ERROR_CODE << std::endl;
+        std::cerr << "Listen failed with error: " << SOCKET_ERROR_CODE
+                  << std::endl;
         CLOSE_SOCKET(server_fd);
         cleanup();
         return;
@@ -45,7 +49,8 @@ void Server::start() {
     while (true) {
         socket_t client_socket = accept(server_fd, nullptr, nullptr);
         if (client_socket == INVALID_SOCKET) {
-            std::cerr << "Accept failed with error: " << SOCKET_ERROR_CODE << std::endl;
+            std::cerr << "Accept failed with error: " << SOCKET_ERROR_CODE
+                      << std::endl;
             continue;
         }
         std::thread(&Server::handleClient, this, client_socket).detach();
@@ -56,18 +61,20 @@ void Server::start() {
 }
 
 void Server::handleClient(socket_t client_socket) {
-    char buffer[1024] = { 0 };
+    char buffer[1024] = {0};
     while (true) {
         int read_size = recv(client_socket, buffer, 1024, 0);
-        if (read_size <= 0) break;
+        if (read_size <= 0)
+            break;
 
         std::string response = processCommand(buffer);
-        send(client_socket, response.c_str(), response.size(), 0);
+        send(client_socket, response.c_str(), static_cast<int>(response.size()),
+             0);
     }
     CLOSE_SOCKET(client_socket);
 }
 
-std::string Server::processCommand(const std::string& command) {
+std::string Server::processCommand(const std::string &command) {
     std::istringstream iss(command);
     std::string cmd, key, value;
     iss >> cmd >> key;
@@ -76,15 +83,12 @@ std::string Server::processCommand(const std::string& command) {
         iss >> value;
         store_.set(key, value);
         return "OK\r\n";
-    }
-    else if (cmd == "GET") {
+    } else if (cmd == "GET") {
         return store_.get(key) + "\r\n";
-    }
-    else if (cmd == "DEL") {
+    } else if (cmd == "DEL") {
         store_.del(key);
         return "OK\r\n";
-    }
-    else if (cmd == "PING") {
+    } else if (cmd == "PING") {
         return "PONG\r\n";
     }
     return "ERROR: Unknown command\r\n";

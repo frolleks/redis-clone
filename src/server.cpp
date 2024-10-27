@@ -91,7 +91,7 @@ std::string Server::processCommand(const std::string &command) {
     } else if (cmd == "PING") {
         return "+PONG\r\n";
     }
-    return "-ERROR: Unknown command\r\n";
+    return "-ERROR: Unknown command \"" + cmd + "\"\r\n";
 }
 
 void Server::cleanup() {

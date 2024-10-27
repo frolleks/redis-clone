@@ -82,16 +82,16 @@ std::string Server::processCommand(const std::string &command) {
     if (cmd == "SET") {
         iss >> value;
         store_.set(key, value);
-        return "OK\r\n";
+        return "+OK\r\n";
     } else if (cmd == "GET") {
-        return store_.get(key) + "\r\n";
+        return "+" + store_.get(key) + "\r\n";
     } else if (cmd == "DEL") {
         store_.del(key);
-        return "OK\r\n";
+        return "+OK\r\n";
     } else if (cmd == "PING") {
-        return "PONG\r\n";
+        return "+PONG\r\n";
     }
-    return "ERROR: Unknown command\r\n";
+    return "-ERROR: Unknown command\r\n";
 }
 
 void Server::cleanup() {

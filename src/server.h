@@ -1,7 +1,7 @@
-#ifndef SERVER_HPP
-#define SERVER_HPP
+#ifndef SERVER_H
+#define SERVER_H
 
-#include "store.hpp" // Include the Store class for key-value storage
+#include "store.h" // Include the Store class for key-value storage
 #include <iostream>
 #include <sstream>
 #include <string>

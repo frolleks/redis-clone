@@ -1,8 +1,8 @@
 ﻿// redis.cpp : Defines the entry point for the application.
 //
 
-#include "server.hpp"
-#include "store.hpp"
+#include "server.h"
+#include "store.h"
 
 int main() {
     Store store;

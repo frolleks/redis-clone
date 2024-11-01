@@ -1,5 +1,5 @@
-#ifndef STORE_HPP
-#define STORE_HPP
+#ifndef STORE_H
+#define STORE_H
 
 #include <mutex>
 #include <string>

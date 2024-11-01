@@ -1,4 +1,4 @@
-#include "server.hpp"
+#include "server.h"
 
 Server::Server(int port, Store &store) : port_(port), store_(store) {}
 

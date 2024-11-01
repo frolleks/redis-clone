@@ -3,6 +3,7 @@
 
 #include "command.h"
 #include <string>
+#include <vector>
 
 class PingCommand : public Command {
   public:

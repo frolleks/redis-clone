@@ -3,6 +3,7 @@
 #include "del.h"
 #include "echo.h"
 #include "get.h"
+#include "info.h"
 #include "ping.h"
 #include "set.h"
 #include "unknown_command.h"
@@ -43,6 +44,8 @@ std::unique_ptr<Command> CommandParser::parse(const std::string &commandStr) {
         return std::make_unique<PingCommand>(args);
     } else if (cmd == "ECHO") {
         return std::make_unique<EchoCommand>(args);
+    } else if (cmd == "INFO") {
+        return std::make_unique<InfoCommand>(args);
     } else {
         return std::make_unique<UnknownCommand>(cmd);
     }

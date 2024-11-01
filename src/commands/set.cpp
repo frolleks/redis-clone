@@ -8,7 +8,8 @@ SetCommand::SetCommand(const std::vector<std::string> &args) : valid_(false) {
 void SetCommand::parseArguments(const std::vector<std::string> &args) {
     if (args.size() < 2) {
         valid_ = false;
-        error_message_ = "-ERROR: SET command requires a key and a value\r\n";
+        error_message_ =
+            encoder.error("ERROR: SET command requires a key and a value");
         return;
     }
 
@@ -32,7 +33,8 @@ void SetCommand::parseArguments(const std::vector<std::string> &args) {
         // If closing quote is not found
         if (valueStream.fail()) {
             valid_ = false;
-            error_message_ = "-ERROR: Missing closing quote in value\r\n";
+            error_message_ =
+                encoder.error("ERROR: Missing closing quote in value");
             return;
         }
     } else {
@@ -48,5 +50,5 @@ std::string SetCommand::execute(Store &store) {
         return error_message_;
     }
     store.set(key_, value_);
-    return "+OK\r\n";
+    return encoder.simple_string("OK");
 }

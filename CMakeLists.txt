@@ -13,7 +13,7 @@ project ("redis")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/commands)
 
-file(GLOB SRC_FILES "src/*.cpp" "src/commands/*.cpp")
+file(GLOB SRC_FILES "src/*.cpp" "src/commands/*.cpp" "src/utils/*.cpp")
 
 add_executable(redis ${SRC_FILES})
 

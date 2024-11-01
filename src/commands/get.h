@@ -2,6 +2,7 @@
 #define GET_H
 
 #include "../store.h"
+#include "../utils/resp_encoder.h"
 #include "command.h"
 #include <string>
 #include <vector>
@@ -12,6 +13,7 @@ class GetCommand : public Command {
     std::string execute(Store &store) override;
 
   private:
+    RespEncoder encoder;
     std::string key_;
     bool valid_;
     std::string error_message_;

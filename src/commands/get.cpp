@@ -7,7 +7,8 @@ GetCommand::GetCommand(const std::vector<std::string> &args) : valid_(false) {
 void GetCommand::parseArguments(const std::vector<std::string> &args) {
     if (args.size() != 1) {
         valid_ = false;
-        error_message_ = "-ERROR: GET command requires exactly one key\r\n";
+        error_message_ =
+            encoder.error("ERROR: GET command requires exactly one key");
         return;
     }
     key_ = args[0];
@@ -20,7 +21,7 @@ std::string GetCommand::execute(Store &store) {
     }
     std::string value = store.get(key_);
     if (!value.empty()) {
-        return "+" + value + "\r\n";
+        return encoder.bulk_string(value);
     }
     return "-ERROR: Key not found\r\n";
 }

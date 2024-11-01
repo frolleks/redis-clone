@@ -7,7 +7,8 @@ DelCommand::DelCommand(const std::vector<std::string> &args) : valid_(false) {
 void DelCommand::parseArguments(const std::vector<std::string> &args) {
     if (args.size() != 1) {
         valid_ = false;
-        error_message_ = "-ERROR: DEL command requires exactly one key\r\n";
+        error_message_ =
+            encoder.error("ERROR: DEL command requires exactly one key");
         return;
     }
     key_ = args[0];
@@ -19,5 +20,5 @@ std::string DelCommand::execute(Store &store) {
         return error_message_;
     }
     store.del(key_);
-    return "+OK\r\n";
+    return encoder.simple_string("OK");
 }

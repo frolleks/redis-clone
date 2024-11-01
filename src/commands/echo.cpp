@@ -6,28 +6,33 @@ EchoCommand::EchoCommand(const std::vector<std::string> &args) : valid_(false) {
 }
 
 void EchoCommand::parseArguments(const std::vector<std::string> &args) {
-    if (args.size() < 1) {
+    if (args.empty()) {
         valid_ = false;
         error_message_ =
-            "-ERROR: ECHO command requires at least one argument\r\n";
+            encoder.error("ERROR: ECHO command requires at least one argument");
         return;
     }
 
+    // Concatenate all arguments into a single string
     std::string valueStr;
-    valueStr = args[0];
+    for (const auto &arg : args) {
+        if (!valueStr.empty()) {
+            valueStr += " "; // Add space between words
+        }
+        valueStr += arg;
+    }
 
     // Handle quoted strings in value
-    if (!valueStr.empty() && valueStr.front() == '"') {
-        std::istringstream valueStream(valueStr);
-        std::getline(valueStream, value_, '"'); // Skip the opening quote
-        std::getline(valueStream, value_, '"'); // Read until the closing quote
-
-        // If closing quote is not found
-        if (valueStream.fail()) {
-            valid_ = false;
-            error_message_ = "-ERROR: Missing closing quote in value\r\n";
-            return;
-        }
+    if (!valueStr.empty() && valueStr.front() == '"' &&
+        valueStr.back() == '"') {
+        // Remove the opening and closing quotes
+        value_ = valueStr.substr(1, valueStr.size() - 2);
+    } else if (!valueStr.empty() &&
+               (valueStr.front() == '"' || valueStr.back() == '"')) {
+        // If only one quote is found, it's an error
+        valid_ = false;
+        error_message_ = encoder.error("ERROR: Missing closing quote in value");
+        return;
     } else {
         // Value is unquoted
         value_ = valueStr;
@@ -41,5 +46,5 @@ std::string EchoCommand::execute(Store & /*store*/) {
         return error_message_;
     }
 
-    return "\"" + value_ + "\"\r\n";
+    return encoder.bulk_string(value_);
 }

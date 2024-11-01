@@ -1,5 +1,6 @@
 #include "command_parser.h"
 #include "del.h"
+#include "echo.h"
 #include "get.h"
 #include "ping.h"
 #include "set.h"
@@ -43,6 +44,8 @@ std::unique_ptr<Command> CommandParser::parse(const std::string &commandStr) {
         return std::make_unique<DelCommand>(args);
     } else if (cmd == "PING") {
         return std::make_unique<PingCommand>(args);
+    } else if (cmd == "ECHO") {
+        return std::make_unique<EchoCommand>(args);
     } else {
         return std::make_unique<UnknownCommand>(cmd);
     }

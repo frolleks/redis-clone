@@ -16,4 +16,4 @@ class Store {
     std::mutex mu_;
 };
 
-#endif // STORE_HPP
+#endif // STORE_H

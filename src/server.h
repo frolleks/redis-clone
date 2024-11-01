@@ -1,6 +1,7 @@
 #ifndef SERVER_H
 #define SERVER_H
 
+#include "commands/command_parser.h"
 #include "store.h" // Include the Store class for key-value storage
 #include <iostream>
 #include <sstream>
@@ -41,4 +42,4 @@ class Server {
     void cleanup();
 };
 
-#endif // SERVER_HPP
+#endif // SERVER_H

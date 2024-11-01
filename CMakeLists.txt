@@ -11,7 +11,11 @@ endif()
 
 project ("redis")
 
-add_executable (redis "src/main.cpp"  "src/store.cpp" "src/server.cpp")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/commands)
+
+file(GLOB SRC_FILES "src/*.cpp" "src/commands/*.cpp")
+
+add_executable(redis ${SRC_FILES})
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET redis PROPERTY CXX_STANDARD 20)

@@ -74,24 +74,10 @@ void Server::handle_client(socket_t client_socket) {
     CLOSE_SOCKET(client_socket);
 }
 
-std::string Server::process_command(const std::string &command) {
-    std::istringstream iss(command);
-    std::string cmd, key, value;
-    iss >> cmd >> key;
-
-    if (cmd == "SET") {
-        iss >> value;
-        store_.set(key, value);
-        return "+OK\r\n";
-    } else if (cmd == "GET") {
-        return "+" + store_.get(key) + "\r\n";
-    } else if (cmd == "DEL") {
-        store_.del(key);
-        return "+OK\r\n";
-    } else if (cmd == "PING") {
-        return "+PONG\r\n";
-    }
-    return "-ERROR: Unknown command \"" + cmd + "\"\r\n";
+std::string Server::process_command(const std::string &commandStr) {
+    CommandParser parser;
+    std::unique_ptr<Command> cmd = parser.parse(commandStr);
+    return cmd->execute(store_);
 }
 
 void Server::cleanup() {

@@ -36,8 +36,8 @@ class Server {
     int port_;
     Store &store_;
 
-    void handleClient(socket_t client_socket);
-    std::string processCommand(const std::string &command);
+    void handle_client(socket_t client_socket);
+    std::string process_command(const std::string &command);
     void cleanup();
 };
 

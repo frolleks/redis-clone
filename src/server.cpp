@@ -53,28 +53,28 @@ void Server::start() {
                       << std::endl;
             continue;
         }
-        std::thread(&Server::handleClient, this, client_socket).detach();
+        std::thread(&Server::handle_client, this, client_socket).detach();
     }
 
     CLOSE_SOCKET(server_fd);
     cleanup();
 }
 
-void Server::handleClient(socket_t client_socket) {
+void Server::handle_client(socket_t client_socket) {
     char buffer[1024] = {0};
     while (true) {
         int read_size = recv(client_socket, buffer, 1024, 0);
         if (read_size <= 0)
             break;
 
-        std::string response = processCommand(buffer);
+        std::string response = process_command(buffer);
         send(client_socket, response.c_str(), static_cast<int>(response.size()),
              0);
     }
     CLOSE_SOCKET(client_socket);
 }
 
-std::string Server::processCommand(const std::string &command) {
+std::string Server::process_command(const std::string &command) {
     std::istringstream iss(command);
     std::string cmd, key, value;
     iss >> cmd >> key;

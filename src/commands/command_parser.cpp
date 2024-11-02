@@ -11,6 +11,27 @@
 #include <memory>
 #include <stdexcept>
 
+CommandParser::CommandParser() {
+    command_map_["SET"] = [](const std::vector<std::string> &args) {
+        return std::make_unique<SetCommand>(args);
+    };
+    command_map_["GET"] = [](const std::vector<std::string> &args) {
+        return std::make_unique<GetCommand>(args);
+    };
+    command_map_["DEL"] = [](const std::vector<std::string> &args) {
+        return std::make_unique<DelCommand>(args);
+    };
+    command_map_["PING"] = [](const std::vector<std::string> &args) {
+        return std::make_unique<PingCommand>(args);
+    };
+    command_map_["ECHO"] = [](const std::vector<std::string> &args) {
+        return std::make_unique<EchoCommand>(args);
+    };
+    command_map_["INFO"] = [](const std::vector<std::string> &args) {
+        return std::make_unique<InfoCommand>(args);
+    };
+}
+
 std::unique_ptr<Command> CommandParser::parse(const std::string &commandStr) {
     std::vector<std::string> args;
 
@@ -33,20 +54,13 @@ std::unique_ptr<Command> CommandParser::parse(const std::string &commandStr) {
     // Remove the command from args
     args.erase(args.begin());
 
-    // Match the command and create the appropriate Command object
-    if (cmd == "SET") {
-        return std::make_unique<SetCommand>(args);
-    } else if (cmd == "GET") {
-        return std::make_unique<GetCommand>(args);
-    } else if (cmd == "DEL") {
-        return std::make_unique<DelCommand>(args);
-    } else if (cmd == "PING") {
-        return std::make_unique<PingCommand>(args);
-    } else if (cmd == "ECHO") {
-        return std::make_unique<EchoCommand>(args);
-    } else if (cmd == "INFO") {
-        return std::make_unique<InfoCommand>(args);
+    auto it = command_map_.find(cmd);
+    if (it != command_map_.end()) {
+        // Command found, call the associated lambda to create the command
+        // object
+        return it->second(args);
     } else {
+        // Command not found, return UnknownCommand
         return std::make_unique<UnknownCommand>(cmd);
     }
 }
